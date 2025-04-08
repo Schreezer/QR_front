@@ -39,8 +39,8 @@ export class MemStorage implements IStorage {
       showNotifications: true,
       browserType: "chrome",
       timeout: 30,
-      formFieldSelector: "input[type='text']",
-      submitButtonSelector: "button[type='submit'], input[type='submit']",
+      formFieldSelector: '[data-cy="enter-name-field"]',
+      submitButtonSelector: '[data-cy="start-game-button"]',
       autoRetry: true,
     };
   }
@@ -80,8 +80,8 @@ export class MemStorage implements IStorage {
       showNotifications: true,
       browserType: "chrome",
       timeout: 30,
-      formFieldSelector: "input[type='text']",
-      submitButtonSelector: "button[type='submit'], input[type='submit']",
+      formFieldSelector: '[data-cy="enter-name-field"]',
+      submitButtonSelector: '[data-cy="start-game-button"]',
       autoRetry: true,
     };
     return this.appSettings;
@@ -99,7 +99,8 @@ export class MemStorage implements IStorage {
     const newHistory: AutomationHistory = {
       ...history,
       id,
-      date: new Date().toISOString(),
+      date: new Date(),
+      errorMessage: history.errorMessage ?? null,
     };
     this.histories.push(newHistory);
     return newHistory;

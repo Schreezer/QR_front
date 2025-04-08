@@ -100,6 +100,7 @@ class AutomationManager {
       throw new Error("Automation is already running");
     }
     
+    console.log("Starting automation...");
     this.isRunning = true;
     const startTime = Date.now();
     
@@ -143,18 +144,22 @@ class AutomationManager {
     try {
       // Step 1: Launch browsers
       await this.launchBrowsers(url, options);
+      console.log("Browsers launched successfully.");
 
       // Step 2: Fill forms
       await this.fillForms(options);
+      console.log("Forms filled successfully.");
 
       // Step 3: Submit forms
       await this.submitForms(options);
+      console.log("Forms submitted successfully.");
 
       // Complete automation
       this.updateStep("submit", { status: "success" });
       this.status.status = "completed";
       this.status.endTime = Date.now();
       
+      console.log("Automation completed successfully.");
       // Final screenshot
       await this.captureScreenshots();
       
@@ -251,6 +256,9 @@ class AutomationManager {
       await Promise.all(
         this.browserInstances.map(async (instance, index) => {
           try {
+            // Wait for loader to disappear
+            await instance.page.waitForSelector('.screen-loading', { hidden: true, timeout: options.timeout });
+
             // Wait for form field to be available
             await instance.page.waitForSelector(options.formFieldSelector, { timeout: options.timeout });
             
@@ -283,11 +291,19 @@ class AutomationManager {
       await Promise.all(
         this.browserInstances.map(async (instance, index) => {
           try {
-            // Wait for submit button to be available
-            await instance.page.waitForSelector(options.submitButtonSelector, { timeout: options.timeout });
-            
-            // Click the submit button
-            await instance.page.click(options.submitButtonSelector);
+            if (options.submitButtonSelector.startsWith("//")) {
+              // XPath selector
+              await (instance.page as any).waitForXPath(options.submitButtonSelector, { timeout: options.timeout });
+              const elements = await (instance.page as any).$x(options.submitButtonSelector);
+              if (elements.length === 0) {
+                throw new Error(`No element found for XPath: ${options.submitButtonSelector}`);
+              }
+              await elements[0].click();
+            } else {
+              // CSS selector
+              await instance.page.waitForSelector(options.submitButtonSelector, { timeout: options.timeout });
+              await instance.page.click(options.submitButtonSelector);
+            }
             
             // Wait for navigation or a short delay to let the form submit
             try {

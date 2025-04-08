@@ -76,13 +76,13 @@ export default function QRScanner({ onScan, scannerStatus }: QRScannerProps) {
         qrScannerRef.current = new Html5Qrcode(scannerContainerId);
       }
 
-      const decodedText = await qrScannerRef.current.scanFile(file, false);
+      const decodedText = await qrScannerRef.current.scanFile(file, true);
       onScan(decodedText);
     } catch (error) {
       console.error("Error scanning file:", error);
       toast({
         title: "Scanning Error",
-        description: "Could not detect a QR code in the uploaded image.",
+        description: "Could not detect a QR code in the uploaded image. Try a clearer or higher contrast image.",
         variant: "destructive",
       });
     }
@@ -98,7 +98,7 @@ export default function QRScanner({ onScan, scannerStatus }: QRScannerProps) {
 
     try {
       await qrScannerRef.current.applyVideoConstraints({
-        advanced: [{ torch: !flashActive }],
+        advanced: [{ torch: !flashActive } as any],
       });
       setFlashActive(!flashActive);
     } catch (error) {

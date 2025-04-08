@@ -4,8 +4,8 @@ import { RefreshCw, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 
 export default function HistoryList({ history, onClear, onRepeat }: HistoryListProps) {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (dateInput: string | Date) => {
+    const date = new Date(dateInput);
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
