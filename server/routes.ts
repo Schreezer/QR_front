@@ -131,6 +131,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok" });
+  });
+
+  app.get("/api/status", (_req, res) => {
+    res.json({ status: "running" });
+  });
+
   const httpServer = createServer(app);
   
   return httpServer;
