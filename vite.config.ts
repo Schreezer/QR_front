@@ -28,7 +28,4 @@ export default async () => defineConfig({
     outDir: path.resolve(import.meta.dirname, "client", "dist"),
     emptyOutDir: true,
   },
-  optimizeDeps: {
-    include: ['jsqr'],
-  },
 });
