@@ -27,5 +27,8 @@ export default async () => defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "client", "dist"),
     emptyOutDir: true,
+    rollupOptions: {
+      external: ["jsqr"],
+    },
   },
 });
