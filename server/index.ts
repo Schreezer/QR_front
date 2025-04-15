@@ -1,8 +1,16 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cors from "cors"; // Import the cors middleware
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+// Configure CORS: Allow specific origin and credentials
+app.use(cors({
+  origin: 'https://qr-front-mu.vercel.app', // Replace with your frontend's actual origin if different
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

@@ -22,12 +22,16 @@ export default function QRScanner({ onScan, scannerStatus }: QRScannerProps) {
       }
 
       await qrScannerRef.current.start(
-        { facingMode: "environment" },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
+        { facingMode: "environment" }, // Request back camera
+        { // Configuration object
+          fps: 5, // Lower FPS for potentially better processing
+          qrbox: { width: 250, height: 250 }, // Scan region size
+          videoConstraints: { // Request higher resolution
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
         },
-        (decodedText) => {
+        (decodedText) => { // Success callback
           stopScanner();
           onScan(decodedText);
         },
